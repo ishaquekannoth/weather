@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:weather/features/weather/presentation/bloc/weather_bloc.dart';
+import 'package:weather/features/weather/presentation/widgets/weather_loading.dart';
 import 'package:weather/features/weather/presentation/widgets/weather_widgets.dart';
 
 class WeatherPage extends StatefulWidget {
@@ -31,6 +33,10 @@ class _WeatherPageState extends State<WeatherPage> {
               const SizedBox(height: 16),
 
               TextField(
+                maxLength: 25,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+                ],
                 controller: _controller,
                 decoration: InputDecoration(
                   hintText: "Enter city name",
@@ -65,7 +71,6 @@ class _WeatherPageState extends State<WeatherPage> {
               ),
               const SizedBox(height: 20),
 
-              // BlocBuilder for Weather UI
               Expanded(
                 child: Center(
                   child: BlocBuilder<WeatherBloc, WeatherState>(
@@ -74,7 +79,7 @@ class _WeatherPageState extends State<WeatherPage> {
                         case WeatherInitial():
                           return const Text("Enter a city to get weather.");
                         case WeatherLoading():
-                          return const CircularProgressIndicator();
+                          return const WeatherLoadingWidget();
                         case WeatherLoaded(:final weather):
                           return WeatherPopulated(weather: weather);
                         case WeatherError(:final message):
