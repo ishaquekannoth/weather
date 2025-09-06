@@ -1,14 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:fpdart/fpdart.dart' show Either;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:weather/di.dart' show initDependencies, serviceLocator;
-import 'package:weather/features/weather/domain/entities/weather_entity.dart'
-    show WeatherEntity;
-
-import 'core/error/failure.dart' show Failure;
-import 'features/weather/domain/usecases/weather_usecases.dart'
-    show FetchWeatherUseCase;
+import 'package:weather/features/weather/presentation/bloc/weather_bloc.dart';
+import 'package:weather/features/weather/presentation/pages/weather_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,69 +13,31 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() async {
-    _counter++;
-    final FetchWeatherUseCase fetchWeatherUseCase =
-        serviceLocator<FetchWeatherUseCase>();
-
-    const cityName = "Kannur";
-
-    // Call the use case
-    final Either<Failure, WeatherEntity> result = await fetchWeatherUseCase
-        .call(parameters: cityName);
-    log(result.toString());
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+    return ScreenUtilInit(
+      designSize: Size(411.4, 914.3),
+      splitScreenMode: false,
+      enableScaleText: () => true,
+      enableScaleWH: () => true,
+      ensureScreenSize: true,
+      fontSizeResolver: (fontSize, instance) => fontSize * 1,
+      minTextAdapt: true,
+      rebuildFactor: (old, data) => old != data,
+      useInheritedMediaQuery: true,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<WeatherBloc>(
+            create: (BuildContext context) => serviceLocator<WeatherBloc>(),
+          ),
+        ],
+        child: MaterialApp(
+          title: 'Weather App',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          ),
+          home: WeatherPage(),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

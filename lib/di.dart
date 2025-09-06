@@ -8,6 +8,7 @@ import 'package:weather/features/weather/data/repo_impl/remote_ds_impl.dart';
 import 'package:weather/features/weather/data/repo_impl/weather_repo_impl.dart';
 import 'package:weather/features/weather/domain/repositories/i_weather_repo.dart';
 import 'package:weather/features/weather/domain/usecases/weather_usecases.dart';
+import 'package:weather/features/weather/presentation/bloc/weather_bloc.dart';
 
 final GetIt serviceLocator = GetIt.instance;
 
@@ -46,5 +47,8 @@ Future<void> initDependencies() async {
     () => FetchWeatherUseCase(serviceLocator<IWeatherRepo>()),
   );
 
+  serviceLocator.registerFactory<WeatherBloc>(
+    () => WeatherBloc(fetchWeatherUseCase: serviceLocator()),
+  );
   await serviceLocator.allReady();
 }
