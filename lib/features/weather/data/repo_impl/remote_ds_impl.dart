@@ -28,7 +28,11 @@ class RemoteDsImpl implements IRemoteDs {
       );
       return WeatherModel.fromJson(response.data);
     } on DioException catch (dioError) {
-      throw NetworkFailure.fromDioError(dioError: dioError);
+      throw NetworkFailure.fromDioError(
+        messagePath: 'message',
+        dioError: dioError,
+        messageType: ErrorMessageType.messageFromResponseBody,
+      );
     } catch (e) {
       throw DefaultFailure(message: "Its on Us..Something went wrong..");
     }

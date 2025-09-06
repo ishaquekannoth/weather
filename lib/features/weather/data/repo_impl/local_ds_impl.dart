@@ -14,12 +14,12 @@ class LocalDsImpl implements ILocalDs {
   @override
   Future<void> cacheWeather({required WeatherModel weather}) async {
     final jsonString = jsonEncode(weather.toDisk());
-    await prefs.setString(UtilStrings.weather, jsonString);
+    await prefs.setString(weather.cityName.toLowerCase(), jsonString);
   }
 
   @override
-  Future<WeatherModel?> getCachedWeather() async {
-    final jsonString = prefs.getString(UtilStrings.weather);
+  Future<WeatherModel?> getCachedWeather({required String cityName}) async {
+    final jsonString = prefs.getString(cityName.toLowerCase());
     if (jsonString == null) return null;
     try {
       final map = jsonDecode(jsonString) as Map<String, dynamic>;

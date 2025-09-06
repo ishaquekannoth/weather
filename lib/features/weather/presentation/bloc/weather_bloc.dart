@@ -9,8 +9,11 @@ part 'weather_state.dart';
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   final FetchWeatherUseCase fetchWeatherUseCase;
-
-  WeatherBloc({required this.fetchWeatherUseCase}) : super(WeatherInitial()) {
+  final GetCachedWeatherUseCase getCachedWeatherUseCase;
+  WeatherBloc({
+    required this.fetchWeatherUseCase,
+    required this.getCachedWeatherUseCase,
+  }) : super(WeatherInitial()) {
     on<FetchWeather>(_onFetchWeather);
   }
 
@@ -19,7 +22,6 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     Emitter<WeatherState> emit,
   ) async {
     emit(WeatherLoading());
-
     final Either<Failure, WeatherEntity> result = await fetchWeatherUseCase(
       parameters: event.cityName,
     );

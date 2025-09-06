@@ -16,7 +16,7 @@ class WeatherRepoImpl implements IWeatherRepo {
   WeatherRepoImpl({required this.remoteDs, required this.localDs});
 
   @override
-  Future<Either<Failure, WeatherEntity>> getWeatherForCity({
+  Future<Either<Failure, WeatherEntity>> getWeatherForCityFromServer({
     required String cityName,
   }) async {
     WeatherModel? remoteWeather;
@@ -32,7 +32,7 @@ class WeatherRepoImpl implements IWeatherRepo {
       return right(remoteWeather.toEntity());
     } catch (remoteError) {
       try {
-        cachedWeather = await localDs.getCachedWeather();
+        cachedWeather = await localDs.getCachedWeather(cityName: cityName);
         if (cachedWeather != null) {
           return right(cachedWeather.toEntity());
         }
@@ -43,6 +43,24 @@ class WeatherRepoImpl implements IWeatherRepo {
       return left(
         DefaultFailure(message: "Failed to fetch weather for $cityName"),
       );
+    }
+  }
+
+  @override
+  Future<Either<Failure, WeatherEntity>> getLocallyStoredWeatherWeather({
+    required String cityName,
+  }) async {
+    try {
+      final WeatherModel? result = await localDs.getCachedWeather(
+        cityName: cityName,
+      );
+      if (result != null) {
+        return right(result.toEntity());
+      } else {
+        return left(DefaultFailure(message: "No Recent Searches"));
+      }
+    } catch (e) {
+      return left(DefaultFailure(message: e.toString()));
     }
   }
 }

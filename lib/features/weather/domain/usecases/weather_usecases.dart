@@ -7,12 +7,23 @@ import 'package:weather/features/weather/domain/repositories/i_weather_repo.dart
 class FetchWeatherUseCase implements UseCase<WeatherEntity, String> {
   final IWeatherRepo _weatherRepository;
 
-  FetchWeatherUseCase(this._weatherRepository);
+  FetchWeatherUseCase(IWeatherRepo weatherRepo)
+    : _weatherRepository = weatherRepo;
 
   @override
-  Future<Either<Failure, WeatherEntity>> call({
-    required String parameters,
-  }) async {
-    return await _weatherRepository.getWeatherForCity(cityName: parameters);
+  Future<Either<Failure, WeatherEntity>> call({required String parameters}) {
+    return _weatherRepository.getWeatherForCityFromServer(cityName: parameters);
+  }
+}
+
+class GetCachedWeatherUseCase implements UseCase<WeatherEntity?, String> {
+  final IWeatherRepo _weatherRepository;
+
+  GetCachedWeatherUseCase(IWeatherRepo weatherRepo)
+    : _weatherRepository = weatherRepo;
+
+  @override
+  Future<Either<Failure, WeatherEntity>> call({required String parameters}) {
+    return _weatherRepository.getLocallyStoredWeatherWeather(cityName: parameters);
   }
 }
