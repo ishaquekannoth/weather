@@ -8,12 +8,13 @@ import 'package:weather/features/weather/data/model/weather_model.dart';
 class LocalDsImpl implements ILocalDs {
   final SharedPreferences prefs;
 
-  LocalDsImpl(this.prefs);
+  LocalDsImpl({required SharedPreferences sharedPreferences})
+    : prefs = sharedPreferences;
 
   @override
   Future<void> cacheWeather({required WeatherModel weather}) async {
     final jsonString = jsonEncode(weather.toDisk());
-    await prefs.setString(weather.cityName, jsonString);
+    await prefs.setString(UtilStrings.weather, jsonString);
   }
 
   @override

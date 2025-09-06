@@ -1,6 +1,18 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
-void main() {
+import 'package:flutter/material.dart';
+import 'package:fpdart/fpdart.dart' show Either;
+import 'package:weather/di.dart' show initDependencies, serviceLocator;
+import 'package:weather/features/weather/domain/entities/weather_entity.dart'
+    show WeatherEntity;
+
+import 'core/error/failure.dart' show Failure;
+import 'features/weather/domain/usecases/weather_usecases.dart'
+    show FetchWeatherUseCase;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initDependencies();
   runApp(const MyApp());
 }
 
@@ -32,10 +44,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  void _incrementCounter() async {
+    _counter++;
+    final FetchWeatherUseCase fetchWeatherUseCase =
+        serviceLocator<FetchWeatherUseCase>();
+
+    const cityName = "Kannur";
+
+    // Call the use case
+    final Either<Failure, WeatherEntity> result = await fetchWeatherUseCase
+        .call(parameters: cityName);
+    log(result.toString());
   }
 
   @override
@@ -62,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), 
+      ),
     );
   }
 }

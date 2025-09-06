@@ -6,7 +6,4 @@ abstract interface class IWeatherRepo {
   Future<Either<Failure, WeatherEntity>> getWeatherForCity({
     required String cityName,
   });
-  Future<Either<Failure, Unit>> storeWeatherLocally({
-    required WeatherEntity weatherEntity,
-  });
 }

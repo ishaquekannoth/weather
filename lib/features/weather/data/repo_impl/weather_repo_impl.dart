@@ -29,36 +29,20 @@ class WeatherRepoImpl implements IWeatherRepo {
       } catch (cacheError) {
         log("Caching failed ..Not a fatal case...");
       }
-      return Right(remoteWeather.toEntity());
+      return right(remoteWeather.toEntity());
     } catch (remoteError) {
-      // Remote fetch failed, try local cache
       try {
         cachedWeather = await localDs.getCachedWeather();
         if (cachedWeather != null) {
-          return Right(cachedWeather.toEntity());
+          return right(cachedWeather.toEntity());
         }
       } catch (_) {}
-
       if (remoteError is Failure) {
-        return left(DefaultFailure(message: remoteError.message.toString()));
+        return left(remoteError);
       }
-      return Left(
+      return left(
         DefaultFailure(message: "Failed to fetch weather for $cityName"),
       );
-    }
-  }
-
-  @override
-  Future<Either<Failure, Unit>> storeWeatherLocally({
-    required WeatherEntity weatherEntity,
-  }) async {
-    try {
-      await localDs.cacheWeather(
-        weather: WeatherModel.fromEntity(weatherEntity),
-      );
-      return const Right(unit);
-    } catch (e) {
-      return Left(DefaultFailure(message: "Failed to store weather locally"));
     }
   }
 }

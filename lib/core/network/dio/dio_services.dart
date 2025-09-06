@@ -30,12 +30,12 @@ class DioService {
           ? BaseOptions(
               baseUrl: UrlStrings.baseUrl,
               method: method.getMethodName,
-              receiveTimeout: const Duration(seconds: 10),
+              receiveTimeout: const Duration(seconds: 3),
             )
           : baseOptions.copyWith(
               baseUrl: UrlStrings.baseUrl,
               method: method.getMethodName,
-              receiveTimeout: const Duration(seconds: 10),
+              receiveTimeout: const Duration(seconds: 3),
             ),
     );
     if (specificInterceptors != null) {

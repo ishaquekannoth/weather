@@ -16,4 +16,16 @@ class WeatherEntity {
     required this.windSpeed,
     required this.clouds,
   });
+  @override
+  String toString() {
+    return 'WeatherEntity('
+        'cityName: $cityName, '
+        'temperature: $temperature, '
+        'feelsLike: $feelsLike, '
+        'humidity: $humidity, '
+        'description: $description, '
+        'windSpeed: $windSpeed, '
+        'clouds: $clouds'
+        ')';
+  }
 }
