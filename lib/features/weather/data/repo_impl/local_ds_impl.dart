@@ -1,0 +1,35 @@
+import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather/core/network/utils/url_strings.dart';
+import 'package:weather/features/weather/data/data_source_repo/i_local_ds.dart';
+import 'package:weather/features/weather/data/model/weather_model.dart';
+
+class LocalDsImpl implements ILocalDs {
+  final SharedPreferences prefs;
+
+  LocalDsImpl(this.prefs);
+
+  @override
+  Future<void> cacheWeather({required WeatherModel weather}) async {
+    final jsonString = jsonEncode(weather.toDisk());
+    await prefs.setString(weather.cityName, jsonString);
+  }
+
+  @override
+  Future<WeatherModel?> getCachedWeather() async {
+    final jsonString = prefs.getString(UtilStrings.weather);
+    if (jsonString == null) return null;
+    try {
+      final map = jsonDecode(jsonString) as Map<String, dynamic>;
+      return WeatherModel.fromDisk(map);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Future<void> clearCachedWeather() async {
+    await prefs.remove(UtilStrings.weather);
+  }
+}

@@ -34,30 +34,30 @@ enum ErrorMessageType {
 
 T sanitize<T>(dynamic value, {T? defaultValue}) {
   try {
-    // Handle null and empty values
     if (value == null || (value is String && value.trim().isEmpty)) {
       return defaultValue ?? _defaultValue<T>();
     }
 
-    // If the value is already of expected type
-    if (value is T) {
-      return value;
+    if (value is T) return value;
+
+    if (T == String) return value.toString() as T;
+
+    if (T == int) {
+      final parsed = int.tryParse(value.toString());
+      return (parsed ?? defaultValue ?? 0) as T;
     }
 
-    // Attempt to convert
-    if (T == String) return value.toString() as T;
-    if (T == int) {
-      return int.tryParse(value.toString()) as T? ?? defaultValue ?? 0 as T;
-    }
     if (T == double) {
-      return double.tryParse(value.toString()) as T? ??
-          defaultValue ??
-          0.0 as T;
+      final parsed = double.tryParse(value.toString());
+      return (parsed ?? defaultValue ?? 0.0) as T;
     }
+
     if (T == num) {
-      return num.tryParse(value.toString()) as T? ?? defaultValue ?? 0 as T;
+      final parsed = double.tryParse(value.toString());
+      return (parsed ?? defaultValue ?? 0) as T;
     }
-    if (T == bool) return (_parseBool(value)) as T;
+
+    if (T == bool) return _parseBool(value) as T;
   } catch (_) {
     return defaultValue ?? _defaultValue<T>();
   }
