@@ -15,15 +15,3 @@ class FetchWeatherUseCase implements UseCase<WeatherEntity, String> {
     return _weatherRepository.getWeatherForCityFromServer(cityName: parameters);
   }
 }
-
-class GetCachedWeatherUseCase implements UseCase<WeatherEntity?, String> {
-  final IWeatherRepo _weatherRepository;
-
-  GetCachedWeatherUseCase(IWeatherRepo weatherRepo)
-    : _weatherRepository = weatherRepo;
-
-  @override
-  Future<Either<Failure, WeatherEntity>> call({required String parameters}) {
-    return _weatherRepository.getLocallyStoredWeatherWeather(cityName: parameters);
-  }
-}

@@ -9,11 +9,8 @@ part 'weather_state.dart';
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   final FetchWeatherUseCase fetchWeatherUseCase;
-  final GetCachedWeatherUseCase getCachedWeatherUseCase;
-  WeatherBloc({
-    required this.fetchWeatherUseCase,
-    required this.getCachedWeatherUseCase,
-  }) : super(WeatherInitial()) {
+
+  WeatherBloc({required this.fetchWeatherUseCase}) : super(WeatherInitial()) {
     on<FetchWeather>(_onFetchWeather);
   }
 

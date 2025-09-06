@@ -46,14 +46,9 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton<FetchWeatherUseCase>(
     () => FetchWeatherUseCase(serviceLocator<IWeatherRepo>()),
   );
-  serviceLocator.registerLazySingleton<GetCachedWeatherUseCase>(
-    () => GetCachedWeatherUseCase(serviceLocator<IWeatherRepo>()),
-  );
+
   serviceLocator.registerFactory<WeatherBloc>(
-    () => WeatherBloc(
-      fetchWeatherUseCase: serviceLocator(),
-      getCachedWeatherUseCase: serviceLocator(),
-    ),
+    () => WeatherBloc(fetchWeatherUseCase: serviceLocator()),
   );
   await serviceLocator.allReady();
 }

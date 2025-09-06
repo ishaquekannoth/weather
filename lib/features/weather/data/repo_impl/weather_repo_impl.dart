@@ -45,22 +45,4 @@ class WeatherRepoImpl implements IWeatherRepo {
       );
     }
   }
-
-  @override
-  Future<Either<Failure, WeatherEntity>> getLocallyStoredWeatherWeather({
-    required String cityName,
-  }) async {
-    try {
-      final WeatherModel? result = await localDs.getCachedWeather(
-        cityName: cityName,
-      );
-      if (result != null) {
-        return right(result.toEntity());
-      } else {
-        return left(DefaultFailure(message: "No Recent Searches"));
-      }
-    } catch (e) {
-      return left(DefaultFailure(message: e.toString()));
-    }
-  }
 }
