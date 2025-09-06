@@ -64,7 +64,7 @@ class _WeatherPageState extends State<WeatherPage> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.green.withOpacity(0.4), // Soft shadow
+                        color: Colors.green.withAlpha(150), // Soft shadow
                         spreadRadius: 2,
                         blurRadius: 8,
                         offset: const Offset(0, 4),
